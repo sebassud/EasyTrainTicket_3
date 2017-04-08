@@ -1,0 +1,54 @@
+﻿@model EasyTrainTickets3.WebUI.Models.SearchViewModel
+
+@{
+    ViewBag.Title = "Połączenia";
+}
+
+<script>
+    jQuery.fn.clickToggle = function (a, b) {
+        function cb() { [b, a][this._tog ^= 1].call(this); }
+        return this.on("click", cb);
+    };
+
+    $(document).ready(function () {
+ $('.details').hide();
+ $('.connection').clickToggle(
+    	function() {
+           $(this).next('.details').slideDown();
+        },
+        function() {
+           $(this).next('.details').fadeOut();
+      }
+    ); // koniec funkcji toggle
+}); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+
+            @foreach (var con in Model.ConnectionPaths)
+            {
+                @Html.Partial("_ConnectionPathSummary", con)
+            }
+            @if(Model.ConnectionPaths.Count == 0)
+            {
+                <div>Nie znaleziono żadnych połączeń</div>
+                <hr/>
+            }
+
+        @using (Html.BeginForm("Index", "Search"))
+        {
+            <div class="text-center">
+                @Html.HiddenFor(m=>m.SearchParameters.From, Model.SearchParameters.From)
+                @Html.HiddenFor(m => m.SearchParameters.Middle, Model.SearchParameters.Middle)
+                @Html.HiddenFor(m => m.SearchParameters.To, Model.SearchParameters.To)
+                @Html.HiddenFor(m => m.SearchParameters.UserTime, Model.SearchParameters.UserTime)
+                @Html.HiddenFor(m => m.SearchParameters.IsWithoutChange, Model.SearchParameters.IsWithoutChange)
+                @Html.HiddenFor(m => m.SearchParameters.IsExpress, Model.SearchParameters.IsExpress)
+                <input class="btn btn-warning" type="submit" value="Cofnij" />
+            </div>
+        }
+    </div>
+</div>
+

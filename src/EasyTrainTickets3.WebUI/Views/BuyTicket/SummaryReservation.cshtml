@@ -1,0 +1,24 @@
+﻿@model EasyTrainTickets3.WebUI.Models.TicketViewModel
+
+@{
+    ViewBag.Title = "Szczegóły biletu";
+}
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+
+        @foreach (var s in Model.Way)
+        {
+            <pre>@s</pre>
+        }
+       <div class="row" style="font-size: 24px ">Cena: @Model.Price zł </div>
+        @using (Html.BeginForm("BuyTicket", "BuyTicket"))
+        {
+            @Html.Hidden("ticket", Model.JsonString)
+            <div class="text-center">
+                <input class="btn btn-success" type="submit" value="Kup bilet" />
+            </div>
+        }
+     </div>
+</div>

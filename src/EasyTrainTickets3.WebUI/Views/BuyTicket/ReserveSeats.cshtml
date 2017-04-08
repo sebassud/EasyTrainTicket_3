@@ -1,0 +1,53 @@
+﻿@model EasyTrainTickets3.WebUI.Models.TicketViewModel
+
+@{
+    ViewBag.Title = "Wybór miejsc";
+}
+<script>
+    function validate() {
+        var count = 0;
+        $.each($('.list option:selected'), function (index, value) {
+            count += 1;
+        });
+        if(count == @Model.Count) $(':input[type="submit"]').prop('disabled', false);
+        else
+            $(':input[type="submit"]').prop('disabled', true);
+    }
+    $(document).ready(function () {
+        validate();
+
+        $('.list').change(function () {
+            validate();
+        }); // koniec funkcji change
+    }); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        <span>Zarezerwowany fragment połączenia:<br /></span>
+        @foreach (var s in Model.Way)
+        {
+            <pre>@s</pre>
+        }
+        <p>Zarezerwuj na część:</p>
+        <pre class="text-center">@Model.FromStation ==> @Model.EndStation</pre>
+        <p>Wybierz dokładnie miejsc: @Model.Count. Do zaznaczenia wielu miejsc przytrzymaj przycisk Ctrl</p>
+        @using (Html.BeginForm("ReserveSeats", "BuyTicket"))
+        {
+            <div class="row">
+                <div class="col-lg-1">
+                    @Html.ListBoxFor(m => m.SeatsChoose, new MultiSelectList(Model.FreeSeats), new { @class = "list", @style = "height: 200px; width: 100 px" })
+                </div>
+                <div class="col-lg-offset-1">
+                    <img src="@Model.SourcePicture"/>
+                </div>
+            </div>
+            @Html.Hidden("ticket", Model.JsonString)
+            <div class="text-center">
+                <input class="btn btn-success" type="submit" value="Dalej" />
+            </div>
+        }
+        </div>
+    </div>
+

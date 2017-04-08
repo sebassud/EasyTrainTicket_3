@@ -1,0 +1,35 @@
+﻿@model EasyTrainTickets3.WebUI.Models.DateViewModel
+
+@{
+    ViewBag.Title = "Dodaj połączenia";
+}
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("PrepareListConnections", "AddConnections"))
+        {
+            <div class="form-group">
+                <label>Data:</label>
+                @Html.TextBoxFor(m => m.Date, new { @class = "form-control", @id = "datetimepicker", @Value = DateTime.Today.AddDays(1).ToShortDateString() })
+                @Html.ValidationMessageFor(m => m.Date, "", new { @class = "text-danger" })
+            </div>
+            <div class="text-center">
+                <input type="submit" value="Dalej" class="btn btn-success" />
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerydate")
+    <script type="text/javascript">
+    $(function () {
+        $("#datetimepicker").datetimepicker({
+            timepicker: false,
+            format: 'Y-m-d',
+            minDate: '+1'
+        });
+    });
+    </script>
+}

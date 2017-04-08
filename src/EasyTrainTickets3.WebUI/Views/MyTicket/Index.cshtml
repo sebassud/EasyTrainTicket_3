@@ -1,0 +1,43 @@
+﻿@model EasyTrainTickets3.WebUI.Models.MyTicketViewModel
+
+@{
+    ViewBag.Title = "Moje bilety";
+}
+
+<script>
+    jQuery.fn.clickToggle = function (a, b) {
+        function cb() { [b, a][this._tog ^= 1].call(this); }
+        return this.on("click", cb);
+    };
+
+    $(document).ready(function () {
+ $('.details').hide();
+ $('.ticket').clickToggle(
+    	function() {
+           $(this).next('.details').slideDown();
+        },
+        function() {
+           $(this).next('.details').fadeOut();
+      }
+    ); // koniec funkcji toggle
+}); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        @foreach (var ticket in Model.Tickets)
+        {
+            @Html.Partial("_TicketPartial", ticket)
+        }
+    </div>
+    <div class="pager pull-right">
+        @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new { page = x }))
+    </div>
+    @using (Html.BeginForm("Index", "Home"))
+    {
+        <div class="text-center">
+            <input class="btn btn-warning" type="submit" value="Cofnij" />
+        </div>
+    }
+</div>

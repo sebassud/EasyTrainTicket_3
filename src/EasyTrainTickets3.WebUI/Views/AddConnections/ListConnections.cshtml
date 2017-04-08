@@ -1,0 +1,93 @@
+﻿@model EasyTrainTickets3.WebUI.Models.ListConnectionsViewModel
+
+@{
+    ViewBag.Title = "Lista Połączeń";
+}
+
+<script>
+    jQuery.fn.clickToggle = function (a, b) {
+        function cb() { [b, a][this._tog ^= 1].call(this); }
+        return this.on("click", cb);
+    };
+
+    $(document).ready(function () {
+ $('.details').hide();
+ $('.connection').clickToggle(
+    	function() {
+           $(this).next('.details').slideDown();
+        },
+        function() {
+           $(this).next('.details').fadeOut();
+      }
+    ); // koniec funkcji toggle
+}); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        @foreach (var connection in Model.ListConnections)
+        {
+            <div class="row connection">
+                <div class="row">
+                    <div class="col-md-2">
+                        @connection.Connection.StartPlace
+                    </div>
+                    <div class="col-md-2">
+                        <span>@connection.Connection.Parts[0].StartTime.ToShortDateString()</span>
+                    </div>
+                    <div class="col-md-1">
+                        <span>@connection.Connection.Parts[0].StartTime.ToShortTimeString()</span>
+                    </div>
+                    <div class="col-md-2">
+                        <span>@connection.Connection.Name</span>
+                    </div>
+                    @using (Html.BeginForm("DeleteConnection", "AddConnections"))
+                    {
+                        @Html.Hidden("page", Model.PagingInfo.CurrentPage)
+                        @Html.Hidden("stringConnection", connection.JsonString)
+                        <div class="col-lg-1">
+                            <input id="delete" class="btn btn-success" type="submit" value="Usuń pociąg" />
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-lg-2">
+                        @connection.Connection.EndPlace
+                    </div>
+                    <div class="col-lg-2">
+                    </div>
+                    <div class="col-lg-1">
+                        @connection.Connection.Parts.Last().EndTime.ToShortTimeString()
+                    </div>
+                </div>
+            </div>
+            <div class="row details">
+                @foreach (var s in connection.Way)
+                {
+                    <pre>@s</pre>
+                }
+            </div>
+            <hr/>
+        }
+    </div>
+
+    @using (Html.BeginForm("PrepareAddConnection", "AddConnections"))
+    {
+        <div class="text-center">
+            <input type="submit" value="Dodaj połączenie" class="btn btn-success" />
+        </div>
+    }
+    <hr />
+    @using (Html.BeginForm("AddConnections", "AddConnections"))
+    {
+        <div class="text-center">
+            <input type="submit" value="Zapisz połączenia" class="btn btn-success" />
+        </div>
+    }
+                <div class="pager pull-right">
+                    @Html.PageLinks(Model.PagingInfo, x => Url.Action("ListConnections", new { page = x }))
+                </div>
+
+</div>
+

@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="jumbotron">
+    <h1 style="font-family: 'Script MT'">Easy Train Tickets</h1>
+    <p><img src="~/Content/Images/trainLogo.png" /></p>
+    <br />
+    <p class="lead">
+        Wychodząc naprzeciw oczekiwaniom podróżnych oferujemy stronę internetową, na
+        której można szybko wyszukać połączenia kolejowe i zarezerwować bilet bez wychodzenia z domu.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <h2>Dodaj połączenia</h2>
+                    <p>
+                        Wygeneruj połączenia na wybrany dzień.
+                    </p>
+                    <p><a class="btn btn-default" href="@Url.Action("Index","AddConnections")">Przejdź do dodawania połączeń &raquo;</a></p>
+        }
+        else
+        {
+            <h2>Wyszukaj połączenie</h2>
+                    <p>
+                        Podaj miejsce początkowe i końcowe podróży, a także datę i zdecyduj, które połączenie odpowiada ci najbardziej.
+                    </p>
+                    <p><a class="btn btn-default" href="@Url.Action("Index","Search")">Przejdź do wyszukiwania &raquo;</a></p>
+        }
+    </div>
+    <div class="col-md-4">
+        @if (Request.IsAuthenticated)
+        {
+            if (User.IsInRole("User"))
+            {
+                <h2>Moje bilety</h2>
+            <p>Przeglądaj swoją historię zakupionych biletów.</p>
+            <p><a class="btn btn-default" href="@Url.Action("Index", "MyTicket")">Przejdź do podglądu moich biletów &raquo;</a></p>
+            }
+        }
+        else
+        {
+            <h2>Zaloguj się</h2>
+            <p>Przeglądaj swoją historię zakupionych biletów, ale najpierw się zaloguj.</p>
+            <p><a class="btn btn-default" href="@Url.Action("Login","Account")">Przejdź do logowania &raquo;</a></p>
+        }
+    </div>
+    <div class="col-md-4">
+        @if (Request.IsAuthenticated)
+        {
+            <h2>Profil</h2>
+            <p>Przeglądaj swój profil kiedy tylko chcesz.</p>
+            <p><a class="btn btn-default" href="@Url.Action("Index","Manage")">Przejdź do profilu &raquo;</a></p>
+        }
+        else
+        {
+            <h2>Nie masz konta?</h2>
+            <p>Nadszedł czas byś zarejestrował się i odkrył wszystkie funkcjonalności.</p>
+            <p><a class="btn btn-default" href="@Url.Action("Register","Account")">Zarejestruj się &raquo;</a></p>
+        }
+        
+    </div>
+</div>

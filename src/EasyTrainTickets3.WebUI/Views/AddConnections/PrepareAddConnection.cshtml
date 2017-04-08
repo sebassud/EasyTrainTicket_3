@@ -1,0 +1,45 @@
+﻿@model EasyTrainTickets3.WebUI.Models.AddConnectionViewModel
+
+@{
+    ViewBag.Title = "Dodawanie połączenia";
+}
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("AddConnectionParts", "AddConnections"))
+        {
+            <div class="form-group">
+                <label>Nazwa pociągu:</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control"})
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Rodzaj pociągu:</label>
+                @Html.DropDownListFor(m => m.SelectTrain, new SelectList(Model.Trains), "Wybierz opcję", new {@class = "form-control list" })
+                @Html.ValidationMessageFor(m => m.SelectTrain, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Data Odjazdu:</label>
+                @Html.TextBoxFor(m => m.TimeOfDay, new { @class = "form-control", @id = "datetimepicker1", @Value = ViewBag.Date.ToShortTimeString() })
+                @Html.ValidationMessageFor(m => m.TimeOfDay, "", new { @class = "text-danger" })
+            </div>
+            <div class="text-center">
+                <input type="submit" value="Dalej" class="btn btn-success" />
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerydate")
+<script type="text/javascript">
+    $(function () {
+        $("#datetimepicker1").datetimepicker({
+            format: 'H:m',
+            minDate: '0',
+            datepicker: false
+        });
+    });
+</script>
+}

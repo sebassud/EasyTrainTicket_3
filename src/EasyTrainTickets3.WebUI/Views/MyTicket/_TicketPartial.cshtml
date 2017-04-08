@@ -1,0 +1,69 @@
+﻿@model EasyTrainTickets.Domain.Services.Ticket
+
+<div class="row ticket">
+    <div class="row">
+        <div class="col-lg-2">
+            @Model.ConnectionPath.StartStation
+        </div>
+        <div class="col-lg-2">
+            <span>@Model.ConnectionPath.StartTime.ToShortDateString()</span>
+        </div>
+        <div class="col-lg-1">
+            <span>@Model.ConnectionPath.StartTime.ToShortTimeString()</span>
+        </div>
+        <div class="col-lg-2">
+            Czas podróży:
+        </div>
+        <div class="col-lg-2">
+            Przesiadki:  @Model.ConnectionPath.Changes
+        </div>
+        <div class="col-lg-2">
+
+            @foreach (string pic in Model.ConnectionPath.SourcePictures)
+            {
+                <img src="@pic" />
+
+            }
+        </div>
+
+        @using (Html.BeginForm("DeleteTicket", "MyTicket"))
+        {
+            <div class="col-lg-1">
+                @Html.Hidden("stringTicket", Model.JsonString)
+                <input id="delete" class="btn btn-success" type="submit" disabled=@(DateTime.Now.AddHours(1)>Model.ConnectionPath.StartTime) value="Usuń bilet" />
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            @Model.ConnectionPath.EndStation
+        </div>
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-1">
+            @Model.ConnectionPath.EndTime.ToShortTimeString()
+        </div>
+        <div class="col-lg-2">
+            @string.Format("{0}:{1:00} h", Model.ConnectionPath.JourneyTime.Hours, Model.ConnectionPath.JourneyTime.Minutes)
+        </div>
+        <div class="col-lg-2">
+            Cena:  @Model.Price zł
+        </div>
+        <div class="col-lg-2">
+            @foreach (var key in Model.Discounts.Keys)
+            {
+                if(Model.Discounts[key] > 0)
+                {
+                    <span>@key.Type: @Model.Discounts[key]<br/></span>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="row details">
+    @foreach (var s in Model.Way)
+    {
+        <pre>@s</pre>
+    }
+</div>
+<hr />

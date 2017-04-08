@@ -1,0 +1,76 @@
+﻿@model EasyTrainTickets3.WebUI.Models.SearchViewModel
+
+@{
+    ViewBag.Title = "Wyszukaj połączenie";
+}
+
+<script>
+    function validate() {
+        if ($('#from').val() != $('#middle').val() && $('#from').val() != $('#end').val() && $('#middle').val() != $('#end').val() && $('#end').val() != "" && $('#from').val() != "")
+            $(':input[type="submit"]').prop('disabled', false);
+        else
+            $(':input[type="submit"]').prop('disabled', true);
+    }
+    $(document).ready(function () {
+        validate();
+        $('.list').change(function () {
+            validate();
+        })// koniec funkcji change
+    }); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Search","Search"))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label>Skąd:</label>
+                @Html.DropDownListFor(m => m.SearchParameters.From, new SelectList(Model.Stations), "Wybierz opcję", new {@id="from", @class = "form-control list" })
+                @Html.ValidationMessageFor(m => m.SearchParameters.From, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Stacja pośrednia (opcjonalnie):</label>
+                @Html.DropDownListFor(m => m.SearchParameters.Middle, new SelectList(Model.Stations), "Wybierz opcję", new {@id="middle", @class = "form-control list" })
+            </div>
+            <div class="form-group">
+                <label>Dokąd:</label>
+                @Html.DropDownListFor(m => m.SearchParameters.To, new SelectList(Model.Stations), "Wybierz opcję", new {@id="end", @class = "form-control list" })
+                @Html.ValidationMessageFor(m => m.SearchParameters.To, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Data:</label>
+                @Html.TextBoxFor(m => m.SearchParameters.UserTime, new { @class = "form-control", @id = "datetimepicker", @Value = DateTime.Now.AddHours(1).ToString("g") })
+                @Html.ValidationMessageFor(m => m.SearchParameters.UserTime, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label>Tylko bezpośrednie połączenia:</label>
+                @Html.CheckBoxFor(m => m.SearchParameters.IsWithoutChange, new { @class = "checkbox" })
+            </div>
+            <div class="form-group">
+                <label>Akceptuję jazdę ekspresem:</label>
+                <br />
+                <div class="form-inline">
+                    @Html.CheckBoxFor(m => m.SearchParameters.IsExpress, new { @class = "checkbox" })
+                    <img src="~/Content/Images/exImg.png"/>
+                </div>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-success" type="submit" value="Szukaj" />
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerydate")
+<script type="text/javascript">
+    $(function () {
+        $("#datetimepicker").datetimepicker({
+            formatDate: 'Y-m-d',
+            minDate: '0'
+        });
+    });
+</script>
+}

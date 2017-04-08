@@ -1,0 +1,19 @@
+﻿@model EasyTrainTickets3.WebUI.Models.ErrorViewModel
+
+@{
+    ViewBag.Title = "Uwaga";
+}
+
+<div class="panel-warning">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        <div>@Model.ErrorMessage</div>
+        <hr/>
+        @using (Html.BeginForm("Index", "Home"))
+        {
+            <div class="text-center">
+                <input class="btn btn-warning" type="submit" value="OK"/>
+            </div>
+        }
+    </div>
+</div>

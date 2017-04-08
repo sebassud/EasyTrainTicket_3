@@ -1,0 +1,57 @@
+﻿@model EasyTrainTickets3.WebUI.Models.BuyTicketDiscountViewModel
+
+@{
+    ViewBag.Title = "Wybierz ulgi";
+}
+<script>
+    function validate() {
+        var count = 0;
+        $('.num').each(function () {
+            count += $(this).val();
+            if (count == 0) $(':input[type="submit"]').prop('disabled', true);
+            else
+                $(':input[type="submit"]').prop('disabled', false);
+        }); // koniec funkcji each
+    }
+    $(document).ready(function () {
+        $('.dalej').click(function () {
+            var disc = new Array();
+            $('.num').each(function () {
+                disc.push($(this).val());
+            }); // koniec funkcji each
+            $('#SelectedDiscount').val(JSON.stringify(disc));
+        });// koniec funkcji click
+
+        validate();
+
+        $('.num').change(function () {
+            validate();
+        })// koniec funkcji change
+    }); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        <h4>Wybierz ulgi:</h4>
+        <hr/>
+        @using (Html.BeginForm("SummaryPrice", "BuyTicket"))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            for (int i = 0; i < Model.discounts.Count; i++)
+            {
+                <div class="form-group">
+                    @Model.discounts[i].Type:
+                    <input class="num" id=@i type="number" min="0" max="5" value="@Model.qualityDiscounts[i]"/>
+                </div>
+            }
+            <hr/>
+            @Html.Hidden("SelectedDiscount")
+            @Html.Hidden("conIds", Model.conIds)
+            <div class="text-center dalej">
+                <input class="btn btn-success" type="submit" value="Dalej" />
+            </div>
+        }
+        </div>
+    </div>
+

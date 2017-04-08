@@ -1,0 +1,91 @@
+﻿@model EasyTrainTickets3.WebUI.Models.AddConnectionViewModel
+
+@{
+    ViewBag.Title = "Dodawanie połączenia";
+}
+
+<script>
+    function validate() {
+        if (@Model.Connection.Connection.Parts.Count == 0)
+            $('#save').prop('disabled', true);
+        else
+            $('#save').prop('disabled', false);
+    }
+    $(document).ready(function () {
+        validate();
+        $('.lblUp1').click(function(){
+            $('.txtUpDown1').val(parseInt($('.txtUpDown1').val(),10) + 1);
+        });
+        $('.lblDown1').click(function(){
+            $('.txtUpDown1').val(parseInt($('.txtUpDown1').val(),10) - 1);
+            
+        });
+
+        $('.lblUp2').click(function(){
+            $('.txtUpDown2').val(parseInt($('.txtUpDown2').val(),10) + 1);
+        });
+        $('.lblDown2').click(function(){
+            $('.txtUpDown2').val(parseInt($('.txtUpDown2').val(),10) - 1);
+            
+        });
+    }); // koniec funkcji ready
+</script>
+
+<div class="panel-success">
+    <div class="panel-heading text-center"><h2>@ViewBag.Title</h2></div>
+    <div class="panel-body">
+        
+        <div class="row details">
+            @foreach (var s in Model.Connection.Way)
+            {
+                <pre>@s</pre>
+            }
+        </div>
+
+        @using (Html.BeginForm("AddConnectionParts", "AddConnections"))
+        {
+            <div class="form-group">
+                <label>Wybierz drogę:</label>
+                @Html.DropDownListFor(m => m.SelectRoute, new SelectList(Model.AvailableRoutes), "Wybierz opcję", new { @class = "form-control list" })
+                @Html.ValidationMessageFor(m => m.SelectRoute, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label>Podaj rezerwę czasową:</label>
+                @Html.TextBoxFor(m => m.Variance, new { @class = "form-control txtUpDown1", @readonly = "redaonly" })
+                <label class="lblUp1 btn btn-default">+</label>
+                <label class="lblDown1 btn btn-default">-</label>
+                @Html.ValidationMessageFor(m => m.Variance, "", new { @class = "text-danger" })
+            </div>
+
+            if (Model.Connection.Connection.Parts.Count != 0)
+            {
+                <div class="form-group">
+                    <label>Podaj czas postoju:</label>
+                    @Html.TextBoxFor(m => m.StopTime, new { @class = "form-control txtUpDown2" })
+                    <label class="lblUp2 btn btn-default">+</label>
+                    <label class="lblDown2 btn btn-default">-</label>
+                    @Html.ValidationMessageFor(m => m.StopTime, "", new { @class = "text-danger" })
+                </div>
+            }
+
+            @Html.Hidden("stringConnection", Model.Connection.JsonString)
+            @Html.HiddenFor(m => m.StartTime, Model.StartTime);
+            <div class="text-center">
+                <input type="submit" value="Dalej" class="btn btn-success" />
+            </div>
+        }
+        <hr/>
+        @using (Html.BeginForm("AddConnection", "AddConnections"))
+        {
+            @Html.Hidden("stringConnection", Model.Connection.JsonString)
+            <div class="text-center">
+                <input type="submit" id="save" value="Zapisz" class="btn btn-success" />
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
